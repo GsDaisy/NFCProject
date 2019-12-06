@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.nfc.NfcAdapter;
 import android.nfc.Tag;
 import android.os.Bundle;
+import android.util.Xml;
 import android.widget.Button;
 import android.widget.TextView;
 
@@ -14,7 +15,7 @@ public class readActivity extends AppCompatActivity {
 
     NfcAdapter nfcAdapter;
     PendingIntent pendingIntent;
-    private static String tagNum=null;
+    //private static String tagNum=null;
     TextView dataTxt;
 
     @Override
@@ -51,11 +52,27 @@ public class readActivity extends AppCompatActivity {
 
         Tag tag = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);
         if(tag!=null){
-            byte[] tagId = tag.getId();
-            String ttag = tagId.toString();
-            dataTxt.setText(ttag);
-            tagNum = ttag;
+            byte[] byteData = tag.getId();
+
+            dataTxt.setText(byteArrayToString(byteData));
+            //tagNum = byteArrayToString(byteData);
         }
 
     }
+
+    //Convert to hexadecimal
+    public static final String CHARS = "0123456789ABCDEF";
+    public static String byteArrayToString(byte[] b) {
+        StringBuilder sb = new StringBuilder();
+        for(int i=0;i<b.length;i++){
+            sb.append(CHARS.charAt((b[i] >> 4) & 0x0F)).append(CHARS.charAt(b[i] & 0x0F));
+        }
+        return sb.toString();
+    }
+
+
+
+
+
+
 }
