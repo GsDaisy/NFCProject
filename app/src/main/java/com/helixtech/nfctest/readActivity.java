@@ -26,6 +26,8 @@ public class readActivity extends AppCompatActivity {
     PendingIntent pendingIntent;
     //private static String tagNum=null;
     TextView dataTxt;
+    TextView dataTxt2;
+    String result = null;
  
 
     @Override
@@ -34,6 +36,7 @@ public class readActivity extends AppCompatActivity {
         setContentView(R.layout.activity_read);
 
         dataTxt = findViewById(R.id.data_txt);
+        dataTxt2 = findViewById(R.id.data_txt2);
         nfcAdapter = NfcAdapter.getDefaultAdapter(this);
         Intent intent = new Intent(this, getClass()).addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
         pendingIntent = PendingIntent.getActivity(this, 0,intent,0);
@@ -52,9 +55,10 @@ public class readActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
 
-        /*if (nfcAdapter != null) {
+        if (nfcAdapter != null) {
             nfcAdapter.enableForegroundDispatch(this, pendingIntent, null, null);
         }
+        /*
         try {
             Parcelable[] messages = intent.getParcelableArrayExtra(NfcAdapter.EXTRA_NDEF_MESSAGES);
 
@@ -80,6 +84,7 @@ public class readActivity extends AppCompatActivity {
             //tagNum = byteArrayToString(byteData);
             processTag(intent);
         }*/
+
         Tag tag = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);
         Ndef ndef = Ndef.get(tag);
 
@@ -95,32 +100,36 @@ public class readActivity extends AppCompatActivity {
             e.printStackTrace();
         }*/
         String id = byteArrayToString(tag.getId());
+        dataTxt.setText(id);
 
         //Parcelable[] messages = intent.getParcelableArrayExtra(NfcAdapter.EXTRA_NDEF_MESSAGES);
-
+        /*
         if (nfcAdapter != null) {
             nfcAdapter.enableForegroundDispatch(this, pendingIntent, null, null);
-        }
-
+        }*/
+        try {
             Parcelable[] messages = intent.getParcelableArrayExtra(NfcAdapter.EXTRA_NDEF_MESSAGES);
-
-            Toast.makeText(this,"여기야 : "+messages.toString(), Toast.LENGTH_SHORT).show();
             if (messages == null) return;
+
+            Toast.makeText(this, "여기야 : " + messages.toString(), Toast.LENGTH_SHORT).show();
+            dataTxt2.setText(messages.toString());
 
             for (int i = 0; i < messages.length; i++)
                 readTagData((NdefMessage) messages[0]);
+        }catch (Exception e){
 
-
+        }
+        Toast.makeText(this, "마지막 : " + result, Toast.LENGTH_SHORT).show();
 
     }
 
     public void readTagData(NdefMessage ndefmsg) {
 
         if(ndefmsg == null ) return ;
-        String result=null;
+        //String result=null;
         String msgs = "";
         msgs += ndefmsg.toString() + "\n";
-
+        result += ndefmsg.toString() + "\n";
         NdefRecord[] records = ndefmsg.getRecords() ;
 
         for(NdefRecord rec : records) {
