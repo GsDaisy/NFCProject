@@ -16,5 +16,9 @@ class MainActivity : AppCompatActivity() {
             val intent = Intent(this, readActivity::class.java)
             startActivity(intent)
         }
+        write_btn.setOnClickListener {
+            val intent = Intent(this, writeActivity::class.java)
+            startActivity(intent)
+        }
     }
 }
