@@ -112,7 +112,7 @@ public class readActivity extends AppCompatActivity {
             if (messages == null) return;
 
             Toast.makeText(this, "여기야 : " + messages.toString(), Toast.LENGTH_SHORT).show();
-            dataTxt2.setText(messages.toString());
+            //dataTxt2.setText(messages.toString());
 
             for (int i = 0; i < messages.length; i++)
                 readTagData((NdefMessage) messages[0]);
