@@ -120,6 +120,7 @@ public class readActivity extends AppCompatActivity {
 
         }
         Toast.makeText(this, "마지막 : " + result, Toast.LENGTH_SHORT).show();
+        dataTxt2.setText(result);
 
     }
 
@@ -129,7 +130,7 @@ public class readActivity extends AppCompatActivity {
         //String result=null;
         String msgs = "";
         msgs += ndefmsg.toString() + "\n";
-        result += ndefmsg.toString() + "\n";
+        //result += ndefmsg.toString() + "\n";
         NdefRecord[] records = ndefmsg.getRecords() ;
 
         for(NdefRecord rec : records) {
@@ -141,7 +142,7 @@ public class readActivity extends AppCompatActivity {
             Short tnf = rec.getTnf();
             String type = String.valueOf(rec.getType());
             String payloadStr = new String(rec.getPayload(), Charset.forName(textEncoding));
-
+            result=payloadStr;
             Toast.makeText(this, tnf+" : " +type+" : " +payloadStr, Toast.LENGTH_SHORT).show();
         }
     }
