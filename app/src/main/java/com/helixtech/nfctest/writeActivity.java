@@ -47,6 +47,7 @@ public class writeActivity extends AppCompatActivity {
     PendingIntent mNfcPendingIntent;
     IntentFilter[] mWriteTagFilters;
     IntentFilter[] mNdefExchangeFilters;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -60,17 +61,19 @@ public class writeActivity extends AppCompatActivity {
         try {
             ndefDetected.addDataType("text/plain");
         } catch (IntentFilter.MalformedMimeTypeException e) {
-            mNdefExchangeFilters = new IntentFilter[] { ndefDetected };
+            mNdefExchangeFilters = new IntentFilter[]{ndefDetected};
         }
         IntentFilter tagDetected = new IntentFilter(
                 NfcAdapter.ACTION_TAG_DISCOVERED);
-        mWriteTagFilters = new IntentFilter[] { tagDetected };
+        mWriteTagFilters = new IntentFilter[]{tagDetected};
     }
+
     @Override
     protected void onResume() {
         super.onResume();
 
     }
+
     private NdefMessage[] getNdefMessages(Intent intent) {
         NdefMessage[] msgs = null;
         String action = intent.getAction();
@@ -78,47 +81,52 @@ public class writeActivity extends AppCompatActivity {
             Parcelable[] rawMsgs = intent.getParcelableArrayExtra(NfcAdapter.EXTRA_NDEF_MESSAGES);
             if (rawMsgs != null) {
                 msgs = new NdefMessage[rawMsgs.length];
-                for (int i = 0; i<rawMsgs.length; i++) {
+                for (int i = 0; i < rawMsgs.length; i++) {
                     msgs[i] = (NdefMessage) rawMsgs[i];
                 }
             } else {
-                byte[] empty = new byte[] {};
+                byte[] empty = new byte[]{};
                 NdefRecord record = new NdefRecord(NdefRecord.TNF_UNCHANGED,
                         empty, empty, empty);
-                NdefMessage msg = new NdefMessage(new NdefRecord[] { record });
-                msgs = new NdefMessage[] { msg };
+                NdefMessage msg = new NdefMessage(new NdefRecord[]{record});
+                msgs = new NdefMessage[]{msg};
             }
         } else {
             finish();
         }
         return msgs;
     }
+
     private void setNotBody(String string) {
         Editable text = mNote.getText();
         text.clear();
         text.append(string);
     }
+
     private void enableNdefExchageMode() {
         mNfcAdapter.enableForegroundNdefPush(writeActivity.this, getNoteAsNdef());
         mNfcAdapter.enableForegroundDispatch(this, mNfcPendingIntent, mNdefExchangeFilters, null);
     }
+
     @Override
     protected void onPause() {
         super.onPause();
         mResumed = false;
         mNfcAdapter.disableForegroundNdefPush(this);
     }
+
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
-        if (!mWriteMode&&NfcAdapter.ACTION_NDEF_DISCOVERED.equals(intent.getAction())) {
+        if (!mWriteMode && NfcAdapter.ACTION_NDEF_DISCOVERED.equals(intent.getAction())) {
             NdefMessage[] msgs = getNdefMessages(intent);
         }
-        if (mWriteMode&&NfcAdapter.ACTION_TAG_DISCOVERED.equals(intent.getAction())) {
+        if (mWriteMode && NfcAdapter.ACTION_TAG_DISCOVERED.equals(intent.getAction())) {
             Tag detectedTag = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);
             writeTag(getNoteAsNdef(), detectedTag);
         }
     }
+
     boolean writeTag(NdefMessage message, Tag detectedTag) {
         int size = message.toByteArray().length;
         try {
@@ -129,7 +137,7 @@ public class writeActivity extends AppCompatActivity {
                     return false;
                 }
                 ndef.writeNdefMessage(message);
-                toast("태그에 기록 : "+message.toString());
+                toast("태그에 기록 : " + message.toString());
                 return true;
             } else {
                 NdefFormatable format = NdefFormatable.get(detectedTag);
@@ -150,6 +158,7 @@ public class writeActivity extends AppCompatActivity {
         }
         return false;
     }
+
     private void toast(String text) {
         Toast.makeText(this, text, Toast.LENGTH_LONG).show();
     }
@@ -169,38 +178,45 @@ public class writeActivity extends AppCompatActivity {
                         getNoteAsNdef());
             }
         }
+
         @Override
         public void beforeTextChanged(CharSequence arg0, int arg1, int arg2, int arg3) {
         }
+
         @Override
         public void onTextChanged(CharSequence arg0, int arg1, int arg2, int arg3) {
         }
     };
+
     protected NdefMessage getNoteAsNdef() {
         byte[] textBytes = mNote.getText().toString().getBytes();
         NdefRecord textRecord = new NdefRecord(NdefRecord.TNF_MIME_MEDIA,
-                "text/plain".getBytes(), new byte[] {}, textBytes);
-        return new NdefMessage(new NdefRecord[] { textRecord });
+                "text/plain".getBytes(), new byte[]{}, textBytes);
+        return new NdefMessage(new NdefRecord[]{textRecord});
     }
+
     protected void enableTagWriteMode() {
         mWriteMode = true;
         IntentFilter tagDetected = new IntentFilter(
                 NfcAdapter.ACTION_TAG_DISCOVERED);
-        mWriteTagFilters = new IntentFilter[] { tagDetected };
+        mWriteTagFilters = new IntentFilter[]{tagDetected};
         mNfcAdapter.enableForegroundDispatch(this, mNfcPendingIntent,
                 mWriteTagFilters, null);
     }
+
     private void disableNdefExchangeMode() {
         mNfcAdapter.disableForegroundNdefPush(this);
         mNfcAdapter.disableForegroundDispatch(this);
     }
+
     private void disableTagWriteMode() {
         mWriteMode = false;
         mNfcAdapter.disableForegroundDispatch(this);
     }
+
     private void enableNdefExchangeMode() {
         mNfcAdapter.enableForegroundNdefPush(writeActivity.this, getNoteAsNdef());
-        mNfcAdapter.enableForegroundDispatch(this, mNfcPendingIntent,mWriteTagFilters, null);
+        mNfcAdapter.enableForegroundDispatch(this, mNfcPendingIntent, mWriteTagFilters, null);
     }
 }
 

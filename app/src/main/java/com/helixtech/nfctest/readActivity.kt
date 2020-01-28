@@ -49,7 +49,7 @@ class readActivity : AppCompatActivity() {
         super.onResume()
 
         nfcAdapter?.let {
-            it.enableForegroundDispatch(this, pendingIntent,null,null)
+            it.enableForegroundDispatch(this, pendingIntent, null, null)
         }
 
     }
@@ -71,7 +71,7 @@ class readActivity : AppCompatActivity() {
         for (i in byteData) {
             sb.append(String.format("%02X", i and 0xff.toByte()))
         }
-        val id:String = sb.toString()
+        val id: String = sb.toString()
 
         data_txt.text = id
 
@@ -107,7 +107,7 @@ class readActivity : AppCompatActivity() {
                 val payload = rec.payload
                 var textEncoding = "UTF-8"
                 if (payload.size > 0)
-                    textEncoding = if ((payload[0] and 128.toByte()).toInt()==0) "UTF-8" else "UTF-16"
+                    textEncoding = if ((payload[0] and 128.toByte()).toInt() == 0) "UTF-8" else "UTF-16"
 
                 val tnf = rec.tnf
                 val type = rec.type.toString()

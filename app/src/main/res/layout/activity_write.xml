@@ -10,22 +10,23 @@
 
     <LinearLayout
         android:id="@+id/linearLayout1"
-        android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
 
         <Button
             android:id="@+id/write_tag"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Write Data"/>
+            android:text="Write Data" />
     </LinearLayout>
+
     <EditText
         android:id="@+id/note"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:gravity="top"
-        android:hint="Write Data on Tag"/>
+        android:hint="Write Data on Tag" />
 
 
 </LinearLayout>
